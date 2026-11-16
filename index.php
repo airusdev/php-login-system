@@ -110,7 +110,7 @@
         </div>
 
         <!-- Login Form -->
-        <form class="form active" id="login" method="POST" action="">
+        <form class="form active" id="login" method="POST" action="/login.php">
             <label for="login-username">Username</label>
             <input type="text" id="login-username" name="username" placeholder="Enter your username" required>
 
