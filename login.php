@@ -2,9 +2,6 @@
 require_once 'db.php';
 session_start();
 
-// var_dump($_SERVER['REQUEST_METHOD']);
-// var_dump($_POST);
-
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,19 +21,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['errors'] = $errors;
         $_SESSION['old'] = $_POST;
 
-        // echo "Validation failed. Redirecting...";
-        // exit;
-        
         header('Location: index.php');
         exit;
     }
 
     // step 2: look up if username exists
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    $stmt = mysqli_prepare($conn, "SELECT * FROM `users` WHERE username = ?");
+    mysqli_stmt_bind_param($stmt, "s", $user);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+    $user = mysqli_fetch_assoc($result);
 
     // step 3: if username exists, password_verify
+    if ($user) {
+        if (password_verify($pass, $user['password'])) {
+            // step 4: if password_verify matches, let user proceed to the dashboard
+            $_SESSION['user_id'] = $user['user_id'];
+            header('Location: dashboard.php');
+            exit;
+        }
+    } else {
+        //step 5: else invalid username or password
+        $errors['invalid_info'] = 'Invalid username or password.';
+        $_SESSION['errors'] = $errors;
 
-    // step 4: if password_verify matches, let user proceed to the dashboard
-
-    // step 5: else 'Invalid username or password'
+        header('Location: index.php');
+        exit;
+    }
 }
 ?>
