@@ -1,5 +1,18 @@
 <?php
+session_start();
 
+// var_dump($_SERVER['REQUEST_URI']);
+// var_dump($_SESSION['errors'] ?? []);
+// exit;
+
+$errors = $_SESSION['errors'] ?? [];
+$old = $_SESSION['old'] ?? [];
+
+// var_dump($_SESSION['errors']);
+// exit;
+
+unset($_SESSION['errors']);
+unset($_SESSION['old']);
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +70,36 @@
 
         .form { display: none; }
         .form.active { display: block; }
+        
+        /* Turns the input border red when there is an error */
+        .form input.input-error {
+            border: 1.5px solid #d93025;
+            background-color: #fffafa;
+            margin-bottom: 4px;
+        }
 
+        .form input.input-error:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.15);
+        }
+
+        /* Clean, modern red error text + icon */
+        .error-message {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0 0 12px; /* Adjust 12px to match your normal input margin-bottom */
+            color: #d93025;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .error-message svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+        }
         label {
             display: block;
             font-size: 13px;
@@ -109,19 +151,47 @@
             <div class="tab" onclick="switchTab('register', this)">Register</div>
         </div>
 
-        <!-- Login Form -->
-        <form class="form active" id="login" method="POST" action="/login.php">
+<!-- Login Form -->
+        <form class="form active" id="login" method="POST" action="login.php">
             <label for="login-username">Username</label>
-            <input type="text" id="login-username" name="username" placeholder="Enter your username" required>
+            <input 
+                type="text" 
+                id="login-username" 
+                name="username" 
+                placeholder="Enter your username"
+                class="<?= isset($errors['username']) ? 'input-error' : '' ?>"
+            >
+            <?php if (isset($errors['username'])): ?>
+                <p class="error-message">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                        <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 10.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zM8.75 8a.75.75 0 0 1-1.5 0V4.75a.75.75 0 0 1 1.5 0V8z"/>
+                    </svg>
+                    <span><?= htmlspecialchars($errors['username']) ?></span>
+                </p>
+            <?php endif; ?>
 
             <label for="login-password">Password</label>
-            <input type="password" id="login-password" name="password" placeholder="••••••••" required>
+            <input 
+                type="password" 
+                id="login-password" 
+                name="password" 
+                placeholder="••••••••"
+                class="<?= isset($errors['password']) ? 'input-error' : '' ?>"
+            >
+            <?php if (isset($errors['password'])): ?>
+                <p class="error-message">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                        <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 10.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zM8.75 8a.75.75 0 0 1-1.5 0V4.75a.75.75 0 0 1 1.5 0V8z"/>
+                    </svg>
+                    <span><?= htmlspecialchars($errors['password']) ?></span>
+                </p>
+            <?php endif; ?>
 
             <button type="submit">Login</button>
         </form>
 
         <!-- Register Form -->
-        <form class="form" id="register" method="POST" action="">
+        <form class="form" id="register" method="POST" action="/register.php">
             <label for="reg-username">Username</label>
             <input type="text" id="reg-username" name="username" placeholder="Choose a username" required>
 
