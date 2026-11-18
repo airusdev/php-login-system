@@ -257,7 +257,7 @@ unset($_SESSION['errors']);
 
     <div class="card">
         <?php
-            $reg_is_active = (isset($errors['reg_username']) || isset($errors['reg_password']) || isset($errors['reg_reenter_password']) || isset($errors['reg_unsuccessful_insert']));
+            $reg_is_active = (isset($errors['reg_username']) || isset($errors['reg_password']) || isset($errors['reg_reenter_password']) || isset($errors['reg_unsuccessful_insert']) || isset($errors['reg_invalid_length']));
         ?>
 
         <div class="tabs">
@@ -391,13 +391,13 @@ unset($_SESSION['errors']);
             </ul>
 
             <label for="reg-password">Password</label>
-            <div class="password-wrapper <?= isset($errors['reg_password']) ? 'has-error' : '' ?>">
+            <div class="password-wrapper <?= (isset($errors['reg_password']) || isset($errors['reg_invalid_length'])) ? 'has-error' : '' ?>">
                 <input
                     type="password"
                     id="reg-password"
                     name="reg_password"
                     placeholder="••••••••"
-                    class="password-field <?= isset($errors['reg_password']) ? 'input-error' : '' ?>"
+                    class="password-field <?= (isset($errors['reg_password']) || isset($errors['reg_invalid_length'])) ? 'input-error' : '' ?>"
                 >
                 <button type="button" class="toggle-password" onclick="togglePasswords(this)" aria-label="Toggle password visibility">
                     <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -421,16 +421,23 @@ unset($_SESSION['errors']);
                     </svg>
                     <span><?= htmlspecialchars($errors['reg_password']) ?></span>
                 </p>
+            <?php elseif (isset($errors['reg_invalid_length'])): ?>
+                <p class="error-message">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                        <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 10.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zM8.75 8a.75.75 0 0 1-1.5 0V4.75a.75.75 0 0 1 1.5 0V8z"/>
+                    </svg>
+                    <span><?= htmlspecialchars($errors['reg_invalid_length']) ?></span>
+                </p>
             <?php endif; ?>
 
             <label for="reg-reenter-password">Re-enter Password</label>
-            <div class="password-wrapper <?= isset($errors['reg_reenter_password']) ? 'has-error' : '' ?>">
+            <div class="password-wrapper <?= (isset($errors['reg_reenter_password']) || isset($errors['reg_invalid_length'])) ? 'has-error' : '' ?>">
                 <input
                     type="password"
                     id="reg-reenter-password"
                     name="reg_reenter_password"
                     placeholder="••••••••"
-                    class="password-field <?= isset($errors['reg_reenter_password']) ? 'input-error' : '' ?>"
+                    class="password-field <?= (isset($errors['reg_reenter_password']) || isset($errors['reg_invalid_length'])) ? 'input-error' : '' ?>"
                 >
                 <button type="button" class="toggle-password" onclick="togglePasswords(this)" aria-label="Toggle password visibility">
                     <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -453,6 +460,13 @@ unset($_SESSION['errors']);
                         <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 10.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zM8.75 8a.75.75 0 0 1-1.5 0V4.75a.75.75 0 0 1 1.5 0V8z"/>
                     </svg>
                     <span><?= htmlspecialchars($errors['reg_reenter_password']) ?></span>
+                </p>
+            <?php elseif (isset($errors['reg_invalid_length'])): ?>
+                <p class="error-message">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                        <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 10.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zM8.75 8a.75.75 0 0 1-1.5 0V4.75a.75.75 0 0 1 1.5 0V8z"/>
+                    </svg>
+                    <span><?= htmlspecialchars($errors['reg_invalid_length']) ?></span>
                 </p>
             <?php endif; ?> 
 

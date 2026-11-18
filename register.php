@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // step 3: check consecutive underscores
     if (preg_match('/__/', $user)) {
-        $errors['reg_username'] = 'No consequential underscores';
+        $errors['reg_username'] = 'No consecutive underscores';
     }
 
     // step 4: check if both passwords match
@@ -41,13 +41,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['reg_reenter_password'] = 'Please make sure both passwords match.';
     }
 
+    // step 5: check if valid length
+    $length = mb_strlen($pass);
+    if ($length < 8 || $length > 256) {
+        $errors['reg_invalid_length'] = 'Password length must be greater than 8 but less than 256.';
+    }
+
     if (!empty($errors)) {
         $_SESSION['errors'] = $errors;
         header('Location: index.php');
         exit;
     }
 
-    // step 5: look up if username exists
+    // step 6: look up if username exists
     $stmt = mysqli_prepare($conn, "SELECT * FROM `users` WHERE username = ?");
     mysqli_stmt_bind_param($stmt, "s", $user);
     mysqli_stmt_execute($stmt);
@@ -55,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = mysqli_stmt_get_result($stmt);
     $checked_user = mysqli_fetch_assoc($result);
 
-    // step 6: if username exists, warn user
+    // step 7: if username exists, warn user
     if ($checked_user) {
         $errors['reg_username'] = 'This username is unavailable. Please choose another username';
         $_SESSION['errors'] = $errors;
@@ -65,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     try {
-        // step 7: successful registration
+        // step 8: successful registration
         $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
         $stmt = mysqli_prepare($conn, "INSERT INTO `users` (`username`, `password`) VALUES (?, ?)");
 
@@ -80,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     } catch (mysqli_sql_exception $e) {
-        // step 8: catch mysql insert errors
+        // step 9: catch mysql insert errors
         $errors['reg_unsuccessful_insert'] = 'Registration failed. Please try again.';
         $_SESSION['errors'] = $errors;
         header('Location: index.php');
