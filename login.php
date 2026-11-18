@@ -42,13 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: dashboard.php');
             exit;
         }
-    } else {
-        //step 5: else invalid username or password
-        $errors['invalid_info'] = 'Invalid username or password.';
-        $_SESSION['errors'] = $errors;
-
-        header('Location: index.php');
-        exit;
     }
+
+    //step 5: else invalid username or password
+    $errors['invalid_info'] = 'Invalid username or password.';
+    $_SESSION['errors'] = $errors;
+
+    header('Location: index.php');
+    exit;
 }
 ?>
