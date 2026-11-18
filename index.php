@@ -5,7 +5,6 @@ $messages = $_SESSION['messages'] ?? [];
 $errors = $_SESSION['errors'] ?? [];
 $old = $_SESSION['old'] ?? [];
 
-
 unset($_SESSION['messages']);
 unset($_SESSION['errors']);
 unset($_SESSION['old']);
@@ -282,6 +281,26 @@ unset($_SESSION['old']);
                         <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm3.22 5.28-3.75 3.75a.75.75 0 0 1-1.06 0L4.78 8.4a.75.75 0 0 1 1.06-1.06l1.1 1.1 3.22-3.22a.75.75 0 1 1 1.06 1.06z"/>
                     </svg>
                     <span><?= htmlspecialchars($messages['successful_reg_message']) ?></span>
+                </div>
+            <?php endif; ?>
+            
+            <!-- successful logout message -->
+            <?php if (isset($messages['successful_logout'])): ?>
+                <div class="alert-success" role="status">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                        <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm3.22 5.28-3.75 3.75a.75.75 0 0 1-1.06 0L4.78 8.4a.75.75 0 0 1 1.06-1.06l1.1 1.1 3.22-3.22a.75.75 0 1 1 1.06 1.06z"/>
+                    </svg>
+                    <span><?= htmlspecialchars($messages['successful_logout']) ?></span>
+                </div>
+            <?php endif; ?>
+
+            <!-- user unauthenticated error message -->
+            <?php if (isset($errors['is_unauthenticated'])): ?>
+                <div class="alert-error" role="alert">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                        <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 10.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zM8.75 8a.75.75 0 0 1-1.5 0V4.75a.75.75 0 0 1 1.5 0V8z"/>
+                    </svg>
+                    <span><?= htmlspecialchars($errors['is_unauthenticated']) ?></span>
                 </div>
             <?php endif; ?>
         </form>
