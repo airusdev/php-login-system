@@ -14,7 +14,7 @@ unset($_SESSION['errors']);
     <meta charset="UTF-8">
     <title>Login / Register</title>
     <style>
-        * {
+- {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -212,7 +212,7 @@ unset($_SESSION['errors']);
 
     <div class="card">
         <?php
-            $reg_is_active = (isset($errors['reg_username']) || isset($errors['reg_password']) || isset($errors['reg_reenter_password']));
+            $reg_is_active = (isset($errors['reg_username']) || isset($errors['reg_password']) || isset($errors['reg_reenter_password']) || isset($errors['reg_unsuccessful_insert']));
         ?>
 
         <div class="tabs">
@@ -313,7 +313,8 @@ unset($_SESSION['errors']);
                 placeholder="Choose a username"
                 class="has-hint <?= isset($errors['reg_username']) ? 'input-error' : '' ?>"
             >
-
+            
+            <!-- username error message -->
             <?php if (isset($errors['reg_username'])): ?>
                 <p class="error-message">
                     <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -339,6 +340,7 @@ unset($_SESSION['errors']);
                 class="<?= isset($errors['reg_password']) ? 'input-error' : '' ?>"
             >
 
+            <!-- enter password error message -->
             <?php if (isset($errors['reg_password'])): ?>
                 <p class="error-message">
                     <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -356,7 +358,8 @@ unset($_SESSION['errors']);
                 placeholder="••••••••"
                 class="<?= isset($errors['reg_reenter_password']) ? 'input-error' : '' ?>"
             >
-
+            
+            <!-- reenter password error message -->
             <?php if (isset($errors['reg_reenter_password'])): ?>
                 <p class="error-message">
                     <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
@@ -364,9 +367,19 @@ unset($_SESSION['errors']);
                     </svg>
                     <span><?= htmlspecialchars($errors['reg_reenter_password']) ?></span>
                 </p>
-            <?php endif; ?>
+            <?php endif; ?> 
 
             <button type="submit">Create Account</button>
+
+            <!-- unsuccessful registration message -->
+            <?php if (isset($errors['reg_unsuccessful_insert'])): ?>
+                <div class="alert-error" role="alert">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                        <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 10.5a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zM8.75 8a.75.75 0 0 1-1.5 0V4.75a.75.75 0 0 1 1.5 0V8z"/>
+                    </svg>
+                    <span><?= htmlspecialchars($errors['reg_unsuccessful_insert']) ?></span>
+                </div>
+            <?php endif; ?>
         </form>
 
     </div>
