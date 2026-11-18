@@ -7,8 +7,8 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = trim($_POST['reg_username']);
-    $pass = trim($_POST['reg_password']);
-    $reenter_pass = trim($_POST['reg_reenter_password']);
+    $pass = $_POST['reg_password'];
+    $reenter_pass = $_POST['reg_reenter_password'];
 
     // step 1: check if fields are empty
     if ($user == '') {
@@ -20,9 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!empty($errors)) {
-        unset($_POST['reg_password']);
-        unset($_POST['reg_reenter_password']);
-
         $_SESSION['errors'] = $errors;
         header('Location: index.php');
         exit;
@@ -45,16 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!empty($errors)) {
-        unset($_POST['reg_password']);
-        unset($_POST['reg_reenter_password']);
-
         $_SESSION['errors'] = $errors;
         header('Location: index.php');
         exit;
     }
     
     // step 5: look up if username exists
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
     $stmt = mysqli_prepare($conn, "SELECT * FROM `users` WHERE username = ?");
     mysqli_stmt_bind_param($stmt, "s", $user);
     mysqli_stmt_execute($stmt);
@@ -64,9 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // step 6: if username exists, warn user
     if ($checked_user) {
-        unset($_POST['reg_password']);
-        unset($_POST['reg_reenter_password']);
-
         $errors['reg_username'] = 'This username is unavailable. Please choose another username';
         $_SESSION['errors'] = $errors;
 
@@ -77,14 +67,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // step 7: successful registration
     $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
     $stmt = mysqli_prepare($conn, "INSERT INTO `users` (`username`, `password`) VALUES (?, ?)");
-
     mysqli_stmt_bind_param($stmt, "ss", $user, $hashed_password);
-    mysqli_stmt_execute($stmt);
 
-    if (mysqli_stmt_affected_rows($stmt) > 0) {
-        $messages['successful_reg_message'] = 'Your account has been created successfully!';
-        $_SESSION['messages'] = $messages;
+    try {
+        mysqli_stmt_execute($stmt);
 
+        if (mysqli_stmt_affected_rows($stmt) > 0) {
+            $messages['successful_reg_message'] = 'Your account has been created successfully!';
+            $_SESSION['messages'] = $messages;
+            
+            header('Location: index.php');
+            exit;
+        }
+    } catch (mysqli_sql_exception $e) {
+        $errors['reg_unsuccessful_insert'] = 'Registration failed. Please try again.';
+        $_SESSION['errors'] = $errors;
         header('Location: index.php');
         exit;
     }

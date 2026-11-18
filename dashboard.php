@@ -14,7 +14,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $stmt = $conn->prepare('SELECT username from `users` WHERE user_id = ?');
 $stmt->bind_param("i", $user_id);

@@ -6,7 +6,7 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = trim($_POST['username']);
-    $pass = trim($_POST['password']);
+    $pass = $_POST['password'];
 
     // step 1: check if fields are empty
     if ($user == '') {
@@ -17,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($errors)) {
         unset($_POST['password']);
-
         $_SESSION['errors'] = $errors;
 
         header('Location: index.php');
@@ -25,20 +24,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // step 2: look up if username exists
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    $stmt = mysqli_prepare($conn, "SELECT * FROM `users` WHERE username = ?");
+    $stmt = mysqli_prepare($conn, "SELECT user_id, password FROM `users` WHERE username = ?");
     mysqli_stmt_bind_param($stmt, "s", $user);
     mysqli_stmt_execute($stmt);
 
     $result = mysqli_stmt_get_result($stmt);
-    $user = mysqli_fetch_assoc($result);
+    $fetched_user = mysqli_fetch_assoc($result);
 
     // step 3: if username exists, password_verify
-    if ($user) {
-        if (password_verify($pass, $user['password'])) {
+    if ($fetched_user) {
+        if (password_verify($pass, $fetched_user['password'])) {
             // step 4: if password_verify matches, let user proceed to the dashboard
             session_regenerate_id(true);
-            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['user_id'] = $fetched_user['user_id'];
             header('Location: dashboard.php');
             exit;
         }
