@@ -14,7 +14,7 @@ unset($_SESSION['errors']);
     <meta charset="UTF-8">
     <title>Login / Register</title>
     <style>
-    * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -73,6 +73,51 @@ unset($_SESSION['errors']);
         .form input.input-error:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.15);
+        }
+
+        .password-wrapper {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .password-wrapper.has-error {
+            margin-bottom: 4px;
+        }
+
+        .password-wrapper input {
+            margin-bottom: 0;
+            padding-right: 40px;
+        }
+
+        .form .password-wrapper input.input-error {
+            margin-bottom: 0;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 0;
+            background: none;
+            border: none;
+            color: #888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            background: none;
+            color: #4f46e5;
+        }
+
+        .toggle-password svg {
+            width: 18px;
+            height: 18px;
         }
 
         .error-message {
@@ -242,13 +287,27 @@ unset($_SESSION['errors']);
             <?php endif; ?>
 
             <label for="login-password">Password</label>
-            <input
-                type="password"
-                id="login-password"
-                name="password"
-                placeholder="••••••••"
-                class="<?= isset($errors['password']) ? 'input-error' : '' ?>"
-            >
+            <div class="password-wrapper <?= isset($errors['password']) ? 'has-error' : '' ?>">
+                <input
+                    type="password"
+                    id="login-password"
+                    name="password"
+                    placeholder="••••••••"
+                    class="password-field <?= isset($errors['password']) ? 'input-error' : '' ?>"
+                >
+                <button type="button" class="toggle-password" onclick="togglePasswords(this)" aria-label="Toggle password visibility">
+                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <svg class="eye-closed" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                        <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                </button>
+            </div>
 
             <!-- password is required warning error -->
             <?php if (isset($errors['password'])): ?>
@@ -332,13 +391,27 @@ unset($_SESSION['errors']);
             </ul>
 
             <label for="reg-password">Password</label>
-            <input
-                type="password"
-                id="reg-password"
-                name="reg_password"
-                placeholder="••••••••"
-                class="<?= isset($errors['reg_password']) ? 'input-error' : '' ?>"
-            >
+            <div class="password-wrapper <?= isset($errors['reg_password']) ? 'has-error' : '' ?>">
+                <input
+                    type="password"
+                    id="reg-password"
+                    name="reg_password"
+                    placeholder="••••••••"
+                    class="password-field <?= isset($errors['reg_password']) ? 'input-error' : '' ?>"
+                >
+                <button type="button" class="toggle-password" onclick="togglePasswords(this)" aria-label="Toggle password visibility">
+                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <svg class="eye-closed" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                        <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                </button>
+            </div>
 
             <!-- enter password error message -->
             <?php if (isset($errors['reg_password'])): ?>
@@ -351,13 +424,27 @@ unset($_SESSION['errors']);
             <?php endif; ?>
 
             <label for="reg-reenter-password">Re-enter Password</label>
-            <input
-                type="password"
-                id="reg-reenter-password"
-                name="reg_reenter_password"
-                placeholder="••••••••"
-                class="<?= isset($errors['reg_reenter_password']) ? 'input-error' : '' ?>"
-            >
+            <div class="password-wrapper <?= isset($errors['reg_reenter_password']) ? 'has-error' : '' ?>">
+                <input
+                    type="password"
+                    id="reg-reenter-password"
+                    name="reg_reenter_password"
+                    placeholder="••••••••"
+                    class="password-field <?= isset($errors['reg_reenter_password']) ? 'input-error' : '' ?>"
+                >
+                <button type="button" class="toggle-password" onclick="togglePasswords(this)" aria-label="Toggle password visibility">
+                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <svg class="eye-closed" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                        <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                </button>
+            </div>
             
             <!-- reenter password error message -->
             <?php if (isset($errors['reg_reenter_password'])): ?>
@@ -390,6 +477,22 @@ unset($_SESSION['errors']);
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(formId).classList.add('active');
             clickedTab.classList.add('active');
+        }
+
+        function togglePasswords(clickedBtn) {
+            const form = clickedBtn.closest('form');
+            const fields = form.querySelectorAll('.password-field');
+            const buttons = form.querySelectorAll('.toggle-password');
+            const show = fields[0].type === 'password';
+
+            fields.forEach(input => {
+                input.type = show ? 'text' : 'password';
+            });
+
+            buttons.forEach(btn => {
+                btn.querySelector('.eye-open').style.display = show ? 'none' : 'block';
+                btn.querySelector('.eye-closed').style.display = show ? 'block' : 'none';
+            });
         }
     </script>
 
