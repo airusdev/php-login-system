@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: index.php');
         exit;
     }
-    
+
     // step 5: look up if username exists
     $stmt = mysqli_prepare($conn, "SELECT * FROM `users` WHERE username = ?");
     mysqli_stmt_bind_param($stmt, "s", $user);
@@ -63,23 +63,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: index.php');
         exit;
     }
-
-    // step 7: successful registration
-    $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
-    $stmt = mysqli_prepare($conn, "INSERT INTO `users` (`username`, `password`) VALUES (?, ?)");
-    mysqli_stmt_bind_param($stmt, "ss", $user, $hashed_password);
-
+    
     try {
+        // step 7: successful registration
+        $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
+        $stmt = mysqli_prepare($conn, "INSERT INTO `users` (`username`, `password`) VALUES (?, ?)");
+
+        mysqli_stmt_bind_param($stmt, "ss", $user, $hashed_password);
         mysqli_stmt_execute($stmt);
 
         if (mysqli_stmt_affected_rows($stmt) > 0) {
             $messages['successful_reg_message'] = 'Your account has been created successfully!';
             $_SESSION['messages'] = $messages;
-            
+
             header('Location: index.php');
             exit;
         }
     } catch (mysqli_sql_exception $e) {
+        // step 8: catch mysql insert errors
         $errors['reg_unsuccessful_insert'] = 'Registration failed. Please try again.';
         $_SESSION['errors'] = $errors;
         header('Location: index.php');

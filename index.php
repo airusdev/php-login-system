@@ -14,7 +14,7 @@ unset($_SESSION['errors']);
     <meta charset="UTF-8">
     <title>Login / Register</title>
     <style>
-- {
+    * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
