@@ -3,7 +3,16 @@
 require_once 'db.php';
 session_start();
 
+$errors = [];
+
 // acquire username
+if (!isset($_SESSION['user_id'])) {
+    $errors['is_unauthenticated'] = "Please log in to access the dashboard.";
+    $_SESSION['errors'] = $errors;
+    header('Location: index.php');
+    exit;
+}
+
 $user_id = $_SESSION['user_id'];
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -93,4 +102,4 @@ $conn->close();
     </div>
 
 </body>
-</html>
+    </html>
