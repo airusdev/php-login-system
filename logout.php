@@ -1,8 +1,22 @@
 <?php 
 session_start();
-$messages = [];
 
-unset($_SESSION['user_id']);
+$messages = [];
+$_SESSION = [];
+
+$params = session_get_cookie_params();
+setcookie(
+    session_name(),
+    '',
+    time() - 42000,
+    $params['path'],
+    $params['domain'],
+    $params['secure'],
+    $params['httponly']
+);
+
+session_regenerate_id(true);
+
 $messages['successful_logout'] = "You have been logged out successfully.";
 $_SESSION['messages'] = $messages;
 

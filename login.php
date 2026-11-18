@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_POST['password']);
 
         $_SESSION['errors'] = $errors;
-        $_SESSION['old'] = $_POST;
 
         header('Location: index.php');
         exit;
@@ -38,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user) {
         if (password_verify($pass, $user['password'])) {
             // step 4: if password_verify matches, let user proceed to the dashboard
+            session_regenerate_id(true);
             $_SESSION['user_id'] = $user['user_id'];
             header('Location: dashboard.php');
             exit;

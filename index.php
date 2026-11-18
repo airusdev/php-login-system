@@ -3,11 +3,9 @@ session_start();
 
 $messages = $_SESSION['messages'] ?? [];
 $errors = $_SESSION['errors'] ?? [];
-$old = $_SESSION['old'] ?? [];
 
 unset($_SESSION['messages']);
 unset($_SESSION['errors']);
-unset($_SESSION['old']);
 ?>
 
 <!DOCTYPE html>
